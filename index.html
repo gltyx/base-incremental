@@ -96,6 +96,30 @@
 				border-color: #588;
 			}
 			
+			.hyperButton{
+				background-color: #dcf;
+				color: #768;
+				border-color: #fdf;
+			}
+			button.hyperButton:disabled{
+				background-color: #435;
+				color: #657;
+				border-color: #657;
+			}
+			.psudoHead{
+				font-size: 32px;
+				font-weight: bold;
+			}
+			button.running{
+				background-color: #fff;
+				color: #000;
+				border-color: #eee;
+			}
+			button.challenge{
+				width: 250px;
+				height: 250px;
+				font-size: 14px;
+			}
 			
 		</style>
 		<style id="newsTickerCSS">
@@ -151,45 +175,60 @@
 				<button id="pointsTabButton" onclick="tab('points')" class="pointButton">Points</button>
 				<button id="baseTabButton" onclick="tab('base')" class="baseButton" hidden=true>Base</button>
 				<button id="logTabButton" onclick="tab('log')" class="logButton" hidden=true>Log</button>
+				<button id="hyperTabButton" onclick="tab('hyper')" class="hyperButton" hidden>Hyperspace</button>
+				<button id="lesserBitwiseTabButton" onclick="tab('lessetBit')" class="bitwiseButton" hidden>Bitwise</button>
 				<button id="bitwiseTabButton" onclick="tab('bitwise')" class="bitwiseButton" hidden="true">Bitwise</button>
-				<button id="autoTabButton" onclick="tab('auto')" hidden=true>Automation</button>
+				<button id="autoTabButton" onclick="tab('auto')" hidden=true>Ipsimation</button>
 				<button id="optionsTabButton" onclick="tab('options')">Options</button>
+				<button id="achievementsTabButton" onclick="tab('achievements')">Achievements</button>
+				<br><br>
 			</div>
 			
 			<div id="pointsTab">
-				<h1><span id="scoreTrack">0 points</span> (<span id="scoreBase">Base 2</span>)</h1>
+				<text class="psudoHead"><span id="scoreTrack">0 points</span> (<span id="scoreBase">Base 2</span>)</text>
 				<div style="position: relative;">
 					<button id = "pointButton" onclick = "addPoint()" class="pointButton buyable" style="float: left;">+1 point</button>
-					<button id = "pointGainButton" onclick = "pointGain()" class="pointButton" style="width: 100px; height: 200px; font-size: 12;">Increase base point gain by 1.<br>Cost: <span id="pointGainLabel">10 points</span></button><br>
+					<button id = "pointGainButton" onclick = "pointGain()" class="pointButton" style="width: 100px; height: 200px; font-size: 12;">Increase base point gain by <span id="pointGainPower">1</span>.<br>Cost: <span id="pointGainLabel">10 points</span></button>
+					<button id = "pointGalaxButton" onclick = "galax()" class = "pointButton" style="width: 100px; height: 200px; font-size: 12;" title="point galaxies cost the points buyable, but they increase the effect of the points buyable." hidden=true cost="6">Gain a point galaxy<br>(hover for details)</button><br>
 					<button id = "basePrestButton" onclick = "prestige()" class="baseButton buyable" style="width: 300px; height: 100px;">reset to enter base 3</button>
+					<button id = "baseResetNoGainButton" onclick = "baseResetNoGain()" class="baseButton" style="width: 100px; height: 100px;" hidden=true>Perform a base reset for no gain</button>
 				</div>
 			</div>
 			<div id="baseTab" hidden = true>
-				<h1 id=baseScore>You are in base 2</h1>
+				<text class="psudoHead" id=baseScore>You are in base 2</text>
+				<p>base upgrade's displayed costs are actually the requirement, two less than the displayed cost will be subtracted from your amount.</p>
 				<p>warning: buying anything costing bases will not reset your points but will reset your points upgrades to keep cost scaling in sync.</p>
 				<div id="baseChange" hidden=true>
 					<input id="baseSlider" type="range" min="2" max="2" value="2" hidden=true></input>
 					<button onclick="fastEnterBase()" class="baseButton">Enter base <span id="baseSlideVal">2</span></button>
 				</div>
 				<text>upgrades: (you can hover over some for details)</text><br>
-				<button onclick = "baseUpgrade(1)" id="baseUpgrade1" cost="1" class="baseButton upgrade" style="float: left;">Divides the cost of the points upgrade by your current base. Cost: 1 base</button>
-				<button onclick = "baseUpgrade(4)" id="baseUpgrade4" cost="2" class="upgrade baseButton" style="float: left;">Multiplies your current ipsiClickers by 2 and you gain an extra ipsiClicker whenever you buy them. Cost: 2 bases</button>
-				<button onclick = "baseUpgrade(3)" id="baseUpgrade3" cost="3" class="upgrade baseButton" title="effect caped at x60" style="float: left;">Multiplies point gain by your current base. Cost: 3 bases</button>
-				<button onclick = "baseUpgrade(2)" id="baseUpgrade2" cost="5" class="upgrade baseButton" title="base^6 → base^(6-log60(base))" style="float: left;">Decreses the requirement for entering the next base. Cost: 5 bases</button>
-				<button onclick = "baseUpgrade(5)" id="baseUpgrade5" cost="8" class="upgrade baseButton" title="gain log_base(points) log points on reset" >Unlock log points, gained on base reset, and the log tab. Cost: 8 bases</button>
+				<button onclick = "baseUpgrade(1)" id="baseUpgrade1" cost="1" class="baseButton upgrade" style="float: left;">Divides the cost of the points upgrade by your current base. Cost: 3 bases</button>
+				<button onclick = "baseUpgrade(4)" id="baseUpgrade4" cost="2" class="upgrade baseButton" style="float: left;" hidden="true">Multiplies your current ipsiclickers by 3 and you gain two extra ipsiclickers whenever you buy them. Cost: 4 bases</button>
+				<button onclick = "baseUpgrade(9)" id="baseUpgrade9" cost="2" class="upgrade baseButton" style="float: left;">Multiplies point gain by the distance between your best base and your current base. Cost: 4 bases</button>
+				<button onclick = "baseUpgrade(6)" id="baseUpgrade6" cost="3" class="upgrade baseButton" style="float: left;" title="Does not happen in base 2">The points buyable cost scales as if your base is half as small. Cost: 5 bases</button>
+				<button onclick = "baseUpgrade(3)" id="baseUpgrade3" cost="5" class="upgrade baseButton" title="effect caped at x60" style="float: left;">Multiplies point gain by your current base. Cost: 7 bases</button>
+				<button onclick = "baseUpgrade(2)" id="baseUpgrade2" cost="5" class="upgrade baseButton" title="base^6 → base^(6-log60(base))" style="float: left;" hidden=true>Decreses the requirement for entering the next base. Cost: 7 bases</button>
+				<button onclick = "baseUpgrade(5)" id="baseUpgrade5" cost="8" class="upgrade logButton" title="gain log_base(points) log points on reset" style="">Unlock log points, gained on base reset, and the log tab. Cost: 10 bases</button>
+				<button onclick = "baseUpgrade(7)" id="baseUpgrade7" cost="28" class="upgrade baseButton" hidden="true" style="float: left;">Unlock point galaxies. Cost: 30 bases</button>
+				<button onclick = "baseUpgrade(8)" id="baseUpgrade8" cost="28" class="upgrade baseButton" title="base point gain is floored after power so it remains an int" hidden="true">The points buyable effect scales, factorialy. Cost: 30 bases</button>
 				
 				<br><br>
-				<h1 id="ipsiAmt">You have 0 ipsiClickers</h1>
-				<button onclick = "ipsiClicker('base')" id="buyIpsi" cost="1" class="baseButton buyable" style="">Buy 1 ipsiClicker. Cost: 1 base</button>
-				<button onclick = "ipsiClicker('log')" id="buyIpsiLog" cost="1" timesBought="0" class="logButton buyable" style="" hidden=true>Buy 1 ipsiClicker. Cost: 1 log points</button><br>
-				<button onclick="bitwiseReset()" id="bitwisePrestigeButton" class="bitwiseButton buyable" style="height: 100px; width: 400px;" hidden=false>Reach base 60 and 60^3 ipsiClickers (currently 60^0).</button><br>
-				<text>Note: You gain more ipsiClickers the higher your base is when you buy. <span title="Your base after buying multiplies your ipsiClickers, then 1 gets added.">ⓘ</span> Also, ipsiClickers are hardcapped at 100.</text><button onclick="respecIpsi()">respec</button>
-				
+				<div id="ipsiclickers">
+					<text class="psudoHead" id="ipsiAmt">You have 0 ipsiclickers</text><br>
+					<button onclick = "ipsiClicker('base')" id="buyIpsi" cost="1" class="baseButton buyable" style="">Buy 1 ipsiclicker. Cost: 1 base</button>
+					<button onclick = "ipsiClicker('log')" id="buyIpsiLog" cost="1" timesBought="0" class="logButton buyable" style="" hidden=true>Buy 1 ipsiclicker. Cost: 1 log points</button><br>
+					<button onclick="bitwiseReset()" id="bitwisePrestigeButton" class="bitwiseButton buyable" style="height: 100px; width: 400px;" hidden=true>Reach base 60 and 60^3 ipsiclickers (currently 60^0).</button><br>
+					<text id="ipsiExplain">Note: You gain more ipsiclickers the higher your base is when you buy. <span title="Your base after buying multiplies your ipsiclickers, then 1 gets added.">ⓘ</span> Also, ipsiclickers are hardcapped at 100.</text><button onclick="respecIpsi()">respec</button>
+				</div>
 			</div>
 			<div id="logTab" hidden = true style="nowrap">
-				<h1 id="logAmount">You have 0 log points.</h1>
-				<button id="buyLogPath" onclick="logUpgrade(0)" class="logButton buyable" cost="60">Unlock another path of the log tree. Cost: 60 log points</button>
-				<h1 id="pathAmount">You have 0 unused paths.</h1>
+				<text class="psudoHead" id="logAmount">You have 0 log points.</text><br>
+				<button id="buyLogPath" onclick="logUpgrade(0)" class="logButton buyable" cost="60">Unlock another branch of the log tree. Cost: 60 log points</button>
+				<button id="hyperResetButton" onclick="hyperPrest()" class="hyperButton buyable" hidden>Reset for <span id="hyperResetAmt">0</span> hyperspace energy. Next at <span id="forNextHyper">10</span> log branches.</button><br>
+				<text class="psudoHead" id="pathAmount">You have 0 unused branches.</text><br>
+				<text>You can only buy upgrades in the top row. When you do, it will give you all of the upgrades going down on that branch, until you reach the bottom.</text>
+				<button id="respecLog" onclick="respecLog()">respec</button>
 				<div style="position: relative; z-index: 1;">
 					<svg style="position: absolute; z-index: -1; inset: 0;" width="1125" height="1050">
 						<line x1=600px y1=750px x2=900px y2=525px stroke="white" stroke-width="10"/>
@@ -215,56 +254,152 @@
 						<line x1=1050px y1=300px x2=975px y2=75px stroke="white" stroke-width="10"/>
 						<line x1=1050px y1=300px x2=1125px y2=75px stroke="white" stroke-width="10"/>
 					</svg>
-					<button id="log1000" class="treeUpgrade" style="left: 0px; top: 0px; position: absolute;" onclick="logUpgrade(1000)">1000<br><br>Multiply point gain by the log<sub>base</sub> of your points.<br><br>  </button>
-					<button id="log1001" class="treeUpgrade" style="left: 150px; top: 0px; position: absolute;" onclick="logUpgrade(1001)" title="Base point gain increases by 4rt(base) (rounded each time bought)">1001<br><br>Increase the effect of the points upgrade.<br><br>  </button>
-					<button id="log1010" class="treeUpgrade" style="left: 300px; top: 0px; position: absolute;" onclick="logUpgrade(1010)">1010<br><br>Multiply point gain by the log<sub>2</sub> of your ipsiClickers.<br><br>  </button>
-					<button id="log1011" class="treeUpgrade" style="left: 450px; top: 0px; position: absolute;" onclick="logUpgrade(1011)">1011<br><br>Base upgrade 3 multiplies by your best base instead of your current base.<br><br>  </button>
-					<button id="log1100" class="treeUpgrade" style="left: 600px; top: 0px; position: absolute;" onclick="logUpgrade(1100)">1100<br><br>The ipsiClicker cost becomes a reqirement instead.<br><br>  </button>
-					<button id="log1101" class="treeUpgrade" style="left: 750px; top: 0px; position: absolute;" onclick="logUpgrade(1101)">1101<br><br>You can buy ipsiClickers using log points, you gain an amount equal to the sqrt of your log points before buying.<br><br>  </button>
-					<button id="log1110" class="treeUpgrade" style="left: 900px; top: 0px; position: absolute;" onclick="logUpgrade(1110)">1110<br><br>Unlock points upgrade autobuyer.<br><br>  </button>
-					<button id="log1111" class="treeUpgrade" style="left: 1050px; top: 0px; position: absolute;" onclick="logUpgrade(1111)" title="You can set the minimum multiplier it will buy at">1111<br><br>Unlock ipsiClicker autobuyer.<br><br>  </button>
+					<button id="log1000" class="treeUpgrade" style="left: 0px; top: 0px; position: absolute;" onclick="logUpgrade(1000)" title="log(62-base)(points), base value in formula hardcapped at 60">1000<br><br>Multiply point gain based on the log of your points<br><br>  </button>
+					<button id="log1001" class="treeUpgrade" style="left: 150px; top: 0px; position: absolute;" onclick="logUpgrade(1001)" >1001<br><br>Multiply point gain by the log<sub>2</sub> of your ipsiclickers.<br><br>  </button>
+					<button id="log1010" class="treeUpgrade" style="left: 300px; top: 0px; position: absolute;" onclick="logUpgrade(1010)">1010<br><br>Multiply log point gain by 2 for each unspent log branch. Also, their cost becomes a reqirement.<br><br>  </button>
+					<button id="log1011" class="treeUpgrade" style="left: 450px; top: 0px; position: absolute;" onclick="logUpgrade(1011)">1011<br><br>The points buyable cost becomes a reqirement.<br><br>  </button>
+					<button id="log1100" class="treeUpgrade" style="left: 600px; top: 0px; position: absolute;" onclick="logUpgrade(1100)">1100<br><br>The ipsiclicker cost becomes a reqirement instead.<br><br>  </button>
+					<button id="log1101" class="treeUpgrade" style="left: 750px; top: 0px; position: absolute;" onclick="logUpgrade(1101)">1101<br><br>You can buy ipsiclickers using log points, you gain an amount equal to the sqrt of your log points before buying.<br><br>  </button>
+					<button id="log1110" class="treeUpgrade" style="left: 900px; top: 0px; position: absolute;" onclick="logUpgrade(1110)">1110<br><br>Unlock points upgrade ipsibuyer.<br><br>  </button>
+					<button id="log1111" class="treeUpgrade" style="left: 1050px; top: 0px; position: absolute;" onclick="logUpgrade(1111)" title="You can set the minimum multiplier it will buy at">1111<br><br>Unlock ipsiclicker ipsibuyer.<br><br>  </button>
 					
-					<button id="log100" class="treeUpgrade" style="left: 75px; top: 225px; position: absolute;" title="Requirement becomes 1 point because log(0) = -infinity">100<br><br>Remove the reqirement for base resetting in completed bases and auto re-enter a completed base.<br><br>  </button>
-					<button id="log101" class="treeUpgrade" style="left: 375px; top: 225px; position: absolute;">101<br><br>On base reset, start with an amount of points equal to your log points.<br><br>  </button>
-					<button id="log110" class="treeUpgrade" style="left: 675px; top: 225px; position: absolute;">110<br><br>Start with 100 ipsiClickers on respec (getting this upgrade respecs your ipsiClickers).<br><br>  </button>
-					<button id="log111" class="treeUpgrade" style="left: 975px; top: 225px; position: absolute;" title="You can set minimum log points to gain on reset">111<br><br>Unlock base autobuyer.<br><br>  </button>
+					<button id="log100" class="treeUpgrade" style="left: 75px; top: 225px; position: absolute;" title="L=log10(logPoints), {x>60L/9:1,x<=60L/9:1/2x+1}/180+1">100<br><br>Raise log point gain to a ridiculous formula that involves your current log points and your current base.<br><br>  </button>
+					<button id="log101" class="treeUpgrade" style="left: 375px; top: 225px; position: absolute;">101<br><br>Auto re-enter completed bases on reset.<br><br>  </button>
+					<button id="log110" class="treeUpgrade" style="left: 675px; top: 225px; position: absolute;">110<br><br>Start with 100 ipsiclickers on respec (getting this upgrade respecs your ipsiclickers).<br><br>  </button>
+					<button id="log111" class="treeUpgrade" style="left: 975px; top: 225px; position: absolute;" title="times/sec = ceil(ipsiclickers/1000)">111<br><br>Passively gain the sqrt of your pending log points, the frequency is based off of your ipsiclickers/1000.<br><br>  </button>
 					
 					<button id="log10" class="treeUpgrade" style="left: 225px; top: 450px; position: absolute;">10<br><br>You can freely change your base, up to your best base.<br><br>  </button>
-					<button id="log11" class="treeUpgrade" style="left: 825px; top: 450px; position: absolute;" title="The multiplied portion of ipsiClickers is sqrted beyond 100">11<br><br>You can surpass 100 ipsiClickers, beyond 100 they provide a multiplier instead and are heavily softcapped.<br><br>  </button>
+					<button id="log11" class="treeUpgrade" style="left: 825px; top: 450px; position: absolute;" title="The multiplied portion of ipsiclickers is sqrted beyond 100">11<br><br>You can surpass 100 ipsiclickers, beyond 100 they provide a multiplier instead and are heavily softcapped.<br><br>  </button>
 					
 					<button id="log1" class="treeUpgrade" style="left: 525px; top: 675px; position: absolute;">1<br><br>Raise log points to the sqrt of the base you're exiting.<br><br>  </button>
 				</div>
+			</div>
+			<div id="hyperTab" hidden>
+				<text class="psudoHead">You have <span id="hyperEnergyAmount">0</span> hyperspace energy.</text><br>
+				<button id="hyperspaceBuyable" class="hyperButton buyable" onclick="buyHyperspace()" cost="1">Buy a hyperspace. Cost: <span id="hyperspaceCost">1</span> hyperspace energy</button><br>
+				
+				<text>You have <span id="totalHyperAmount">0</span> total hyperspace.</text><br>
+				<text>You have <span id="unspentHyperspaceAmt">0</span> unspent hyperspace.</text><br>
 				
 				
-				
-				
-				
-				
-				
+				<text class="psudoHead">Dimensions</text><br>
+				<div id="hyperSliderDiv" hidden>
+					<text>-2</text>
+					<input id="hyperSlider" type="range" min="-2" max="2" value="0" step = "1" oninput="hypSlideVal.innerHTML=hyperSlider.value"></input>
+					<text>2</text><br>
+					<text>All dimension production and loss is multiplied by 10<sup id="hypSlideVal">0</sup></text>
+				</div>
+				<text>You have <span id="effectiveHyperAmount">0</span> effective hyperspace, decreasing by <span id="hyperLoss">1</span>% and producing that much space every ipsitick.</text><br>
+				<text>You have <span id="spaceAmount">0</span> space, decreasing by <span id="hyperLoss">1</span>% and producing that many planes every ipsitick.</text><br>
+				<text>You have <span id="planeAmount">0</span> planes, decreasing by <span id="hyperLoss">1</span>% and producing that many lines every ipsitick.</text><br>
+				<text>You have <span id="lineAmount">0</span> lines, decreasing by <span id="hyperLoss">1</span>% every ipsitick.</text><br>
+				<text>Your lines are producing <span id="lineProduction">0</span> points every ipsitick.</text><br><br>
+				<div id="hyperUpgrades">
+					<text class="psudoHead">Upgrades</text><br>
+					<button id="HU2" class="hyperButton upgrade" onclick="hyperUpgrade(2)" cost="2">Unlock a slider that multiplies the output and loss for dimensions. Cost: 2 hyperspace energy</button>
+					<button id="HU1" class="hyperButton upgrade" onclick="hyperUpgrade(1)" cost="2">Multiply log points by 2 for each hyperspace. Cost: 2 hyperspace energy</button>
+					<button id="HU3" class="hyperButton upgrade" onclick="hyperUpgrade(3)" cost="3">Unlock hyperspace challenges. Cost: 3 hyperspace energy</button>
+					<button id="HU7" class="hyperButton upgrade" onclick="hyperUpgrade(7)" cost="15">Muliply hyperspace energy gain by your unspent hyperspace. Cost: 15 hyperspace energy</button>
+					<button id="HU4" class="hyperButton upgrade" onclick="hyperUpgrade(4)" cost="10" hidden>Line to point production is based on your best lines in this base reset. Cost: 10 hyperspace energy</button>
+					<button id="HU6" class="hyperButton upgrade" onclick="hyperUpgrade(6)" cost="15" hidden title="Past base 60, number will display in base 60. Only costs are affected. Also, the reset requirement exponent increases by 1 every 60 bases.">Increase max base by 6 for each hyperspace. Cost: 15 hyperspace energy</button>
+					<button id="HU5" class="hyperButton upgrade" onclick="hyperUpgrade(5)" cost="100">Unlock hyperspatial ipsiclickers. Also move the ipsiclicker section from the base tab to the ipsimation tab. Cost: 100 hyperspace energy</button>
+					<button id="HU8" class="hyperButton upgrade" onclick="hyperUpgrade(8)" cost="200" hidden>Increase max base to log<sub>10</sub>(log points)*20/3. (best log points only increase on hyper reset) Cost: 200 hyperspace energy</button>
+					<button id="HU9" class="bitwiseButton upgrade" onclick="hyperUpgrade(9)" cost="1000" hidden>Unlock bitwise, a side layer that helps you gain more hyperspatial ipsiclickers and give them more effects. Cost: 1000 hyperspace energy</button>
+				</div><br>
+				<div id="hyperBuildings" hidden>
+					<text class="psudoHead">Buildings</text><br>
+					
+					<button class="hyperButton buyable" style="font-size: 16px;" id="HB1" onclick="hyperBuilding(1)" cost = 1 amt=0><span style="font-size: 22px;">Primary hyper building</span><br>Unlock a new hyper building. Cost: <span id="primaryHBCost">1</span> hyperspace energy. <span id="primaryHBAmt">0</span>/5</button>
+					<button class="hyperButton buyable" style="font-size: 16px;" id="HB2" onclick="hyperBuilding(2)" hidden cost = 4 amt=0><span style="font-size: 22px;">Secondary hyper building</span><br>Decrease spacial loss. Cost: <span id="secondaryHBCost">4</span> hyperspace energy. <span id="secondaryHBAmt">0</span>/5</button>
+					<button class="hyperButton buyable" style="font-size: 16px;" id="HB3" onclick="hyperBuilding(3)" hidden cost = 16 amt=0><span style="font-size: 22px;">Tertiary hyper building</span><br>Decrease planar loss. Cost: <span id="tertiaryHBCost">16</span> hyperspace energy. <span id="tertiaryHBAmt">0</span>/5</button>
+					<button class="hyperButton buyable" style="font-size: 16px;" id="HB4" onclick="hyperBuilding(4)" hidden cost = 64 amt=0><span style="font-size: 22px;">Quatrinary hyper building</span><br>Decrease linear loss. Cost: <span id="quatrinaryHBCost">64</span> hyperspace energy. <span id="quatrinaryHBAmt">0</span>/5</button>
+					<button class="hyperButton buyable" style="font-size: 16px;" id="HB5" onclick="hyperBuilding(5)" hidden cost = 256 amt=0><span style="font-size: 22px;">Quinary hyper building</span><br>Increase your maximum base by 60. Cost: <span id="quinaryHBCost">256</span> hyperspace energy. <span id="quinaryHBAmt">0</span>/5</button>
+					<button class="hyperButton buyable" style="font-size: 16px;" id="HB6" onclick="hyperBuilding(6)" hidden cost = 1024 amt=0><span style="font-size: 22px;">Senary hyper building</span><br>Double the effect of the points buyable. Cost: <span id="senaryHBCost">1024</span> hyperspace energy. <span id="senaryHBAmt">0</span>/5</button>
+				</div>
+				<div id="hyperChalenges" hidden>
+					<text class="psudoHead">Challenges</text><br>
+					<text>Click a challenge to start it. Click again to exit early. Hyperspace reset to claim reward.</text><br>
+					<button class="challenge hyperButton" id="HC1" onclick="HC(1)"><text style="font-size: 22px;">Log Branch Desert</text><br>It was too cheap to begin with. The cost for log branches starts at 360 rather than 60<br>Reward: Ipsibuy log branches.</button>
+					<button id="HC2" class="challenge hyperButton" onclick="HC(2)"><text style="font-size: 22px;">Unbased</text><br>This is America, we use base 10. Max base is divided by 6.<br>Reward: Unlock a base ipsimator.</button>
+					<button id="HC3" class="challenge hyperButton" onclick="HC(3)"><text style="font-size: 22px;">No upgrades</text><br>Upgrades are bad game design. All base upgrades except for the last one are disabled, and you start with the last one bought.<br>Reward: Ipsibuy base upgrades for free.</button>
+					<button id="HC4" class="challenge hyperButton" onclick="HC(4)"><text style="font-size: 22px;">Draining log points</text><br>Too easy ∴ bad game design. Lose the log<sub>e</sub> of your log points each second. Reward: Gain 1% of your pending log points every (ipsi/10000)tick.</button>
+					<button id="HC5" class="challenge hyperButton" onclick="HC(5)"><text style="font-size: 22px;">The epic log branch challenge</text><br>Overpowered ∴ bad game design. The first two log upgrades on a specific branch are disabled. Which branch gets disabled is determined by the slider.<br>currently: branch <span id="branchChallenge">1000</span><br>Reward: You keep that branch on hyper resets and log tree respecs</button>
+					<input id="challengeSlider" type="range" min="8" max="15" value="8" step = "1" oninput="branchChallenge.innerHTML = new base(+challengeSlider.value,2).value; if(incompleteBranchChallenges.includes(challengeSlider.value-7)){HC5.disabled=false;}else{HC5.disabled=true}" style="z-index: 1; appearance: slider-vertical; width: 4px; height: 250px" orient="vertical"></input>
+				</div>
+			</div>
+			<div id="lesserBitwiseTab" hidden="true">
+				<text class="psudoHead">You have <span id="lesserBitwiseAmt">0</span> bitwise points.</text>
+				<text>You need 60<sup>8</sup> (~1.680e14) ipsiclickers to reset for bitwise points. You can do this in the ipsimation tab.</text>
 			</div>
 			<div id="bitwiseTab" hidden="true">
 				<h1>You have <span id="bitwiseAmount">0</span> bitwise points, being bitwise-or-ed to your base point gain.</h1>
-				<text>There is nothing to do in this tab at the moment. In a few updates this will be the main subject of an update.</text><br>
-				<p>Bitwise operators are very unlike normal operators. The way that they work is you convert both inputs into binary and then sequentially do a logic gate between the nth digit of input 1 with the nth digit of input 2.</p>
+				<div id="bitwiseSubtabs">
+					<button class="bitwiseButton" id="lootboxesTabButton" onclick="bitwiseSubtab('lootboxes')">Lootboxes</button>
+					<button class="bitwiseButton" id="dropChancesTabButton" onclick="bitwiseSubtab('dropChances')">Drop chances</button>
+					<button class="bitwiseButton" id="arrangementTabButton" onclick="bitwiseSubtab('arrangement')">Arrangement</button>
+				</div>
+				<div id="lootboxesTab">
+					<button id="lootboxOperator" class="bitwiseButton buyable" cost="1">Purchase an operator lootbox. Cost: 1 bitwise point</button>
+					<button id="lootboxNumber" class="bitwiseButton buyable" cost="2">Purchase a number lootbox. Cost: 2 bitwise points</button>
+					<button id="lootboxMilestone" class="bitwiseButton buyable" cost="1">Purchase a milestone lootbox. Cost: 1 milestone</button>
+				</div>
+				<div id="dropChancesTab" hidden>
+					<h1>Operator lootbox:</h1>
+					<h1>Number lootbox:</h1>
+					<h1>Milestone lootbox:</h1>
+				</div>
+				<div id="arrangementTab" hidden>
+					<select id="numberSelection">
+						<option>0</option>
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+					</select>
+					<select id="operatorSelection">
+						<option>OnlyA</option>
+					</select>
+				</div>
+				
+				
 			</div>
 			<div id="autoTab" hidden = true>
 				<div id="baseAutobuyer" hidden = true>
-					<input type="checkbox" id="baseAutoEnabled"></input><text>Base reset at x log points.</text><input id="baseAutoAmt" type="number" min="0" value="10"></input>
+					<input type="checkbox" id="baseAutoEnabled" checked></input><text>Base reset at x log points.</text><input id="baseAutoAmt" type="number" min="0" value="10"></input>
 				</div>
+				
 				<div id="pointAutobuyer" hidden = true>
-					<input type="checkbox" id="pointAutoEnabled"></input><text>Autobuy the points upgrade.</text>
+					<input type="checkbox" id="pointAutoEnabled" checked></input><text>Ipsibuy the points upgrade.</text>
 				</div>
+				
 				<div id="ipsiAutobuyer" hidden = true>
-					<input type="checkbox" id="baseIpsiAutoEnabled"></input><text>Autobuy base ipsiClickers at required base + x</text><input id="baseIpsiAutoAmt" type="number" min="0" value="0"></input>
+					<input type="checkbox" id="baseIpsiAutoEnabled" checked></input><text>Ipsibuy base ipsiclickers.</text>
 					<div id="logIpsiAutobuyer" hidden = true>
-						<input type="checkbox" id="logIpsiAutoEnabled"></input><text>Autobuy log ipsiClickers at x times required amount</text><input id="logIpsiAutoAmt" type="number" min="1" value="1"></input>
+						<input type="checkbox" id="logIpsiAutoEnabled" checked></input><text>Ipsibuy log ipsiclickers.</text>
 					</div>
+				</div>
+				
+				<div id="ipsiNewLoc"></div>
+				<div id="hyperspatialIpsi" hidden>
+					<text class="psudoHead">You have <span id="hyperIpsiAmt">0 hyperspatial ipsiclicker</span>.</text><br>
+					<button id="hyperIpsiBuyable" class="hyperButton buyable" onclick="ipsiClicker('hyperspace')" cost="6">Buy <span id="hyperIpsiBuyAmt">0 hyperspatial ipsiclickers</span>. Cost: <span id="hyperIpsiCost">1</span> hyperspace energy</button><br>
+					<text id="hyperIpsiExplain">You gain more hyperspatial ipsiclickers based on how much energy you have when you buy and how many you already have. What did you expect?</text><br>
+					<text>Current effect(s): <span id="hyperIpsiEffect">speeds up base ipsimator</span></text>
 				</div>
 			</div>
 			<div id="optionsTab" hidden = true>
-				<input type="range" id="freex2" min='1' max='128' value="1" oninput="freeMult.innerHTML = freex2.value"></input><text>x<span id="freeMult">1</span> multiplier (for convenience, leave at x1 if you want to experience the game as intended)</text><br>
-				<button onclick="answer=confirm('are you sure you want to hard reset? this will delete all of your progress, and there will be no reward.');if(answer){localStorage.clear()};location.reload();">HARD RESET</button>
+				<input hidden type="range" id="freex2" min='1' max='2048' value="1" oninput="freeMult.innerHTML = freex2.value"></input><text>x<span id="freeMult">1</span> multiplier (for convenience, leave at x1 if you want to experience the game as intended)</text><br>
+				<button onclick="answer=confirm('are you sure you want to hard reset? this will delete all of your progress, and there will be no reward.');if(answer){localStorage.clear();location.reload();}">HARD RESET</button>
 			</div>
+			<div id="achievementsTab" hidden = true>
+				<text>Coming soon...</text>
+				<text style="position: fixed; top: 100%">Who am I kidding, no it isn't</text>
+			</div>
+		
 		</div>
 		<script src="main.js"></script>
 		<script src="Autosave.js"></script>
