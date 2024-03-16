@@ -64,6 +64,9 @@ function autosave(){
 	localStorage.setItem("hyperIpsis",hyperIpsis)
 	localStorage.setItem("hyperMaxBase",hyperMaxBase)
 	localStorage.setItem("hyperMulti",hyperMulti)
+	
+	localStorage.setItem("version",version)
+	
 	//checkpoint
 	if(totalPaths >= 8 || hyperEnergy >= 1 || totalHyperspace >= 1){
 		localStorage.setItem("checkpoint","hyper")
