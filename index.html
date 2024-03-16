@@ -263,8 +263,8 @@
 					<button id="log1110" class="treeUpgrade" style="left: 900px; top: 0px; position: absolute;" onclick="logUpgrade(1110)">1110<br><br>Unlock points upgrade ipsibuyer.<br><br>  </button>
 					<button id="log1111" class="treeUpgrade" style="left: 1050px; top: 0px; position: absolute;" onclick="logUpgrade(1111)" title="You can set the minimum multiplier it will buy at">1111<br><br>Unlock ipsiclicker ipsibuyer.<br><br>  </button>
 					
-					<button id="log100" class="treeUpgrade" style="left: 75px; top: 225px; position: absolute;" title="L=log10(logPoints), {x>60L/9:1,x<=60L/9:1/2x+1}/180+1">100<br><br>Raise log point gain to a ridiculous formula that involves your current log points and your current base.<br><br>  </button>
-					<button id="log101" class="treeUpgrade" style="left: 375px; top: 225px; position: absolute;">101<br><br>Auto re-enter completed bases on reset.<br><br>  </button>
+					<button id="log100" class="treeUpgrade" style="left: 75px; top: 225px; position: absolute;" title="L=log10(logPoints), {x>60L/9:1,x<=60L/9:1/2x+1}/180+1">100<br><br>Raise log point gain based on your base, but only in base <span id="optimalBase">0</span> or lower (base scales w/ log points)<br><br>  </button>
+					<button id="log101" class="treeUpgrade" style="left: 375px; top: 225px; position: absolute;">101<br><br>Auto re-enter completed bases on reset.<br><input type="checkbox" id="101enabled" checked></input><br>  </button>
 					<button id="log110" class="treeUpgrade" style="left: 675px; top: 225px; position: absolute;">110<br><br>Start with 100 ipsiclickers on respec (getting this upgrade respecs your ipsiclickers).<br><br>  </button>
 					<button id="log111" class="treeUpgrade" style="left: 975px; top: 225px; position: absolute;" title="times/sec = ceil(ipsiclickers/1000)">111<br><br>Passively gain the sqrt of your pending log points, the frequency is based off of your ipsiclickers/1000.<br><br>  </button>
 					
@@ -278,8 +278,8 @@
 				<text class="psudoHead">You have <span id="hyperEnergyAmount">0</span> hyperspace energy.</text><br>
 				<button id="hyperspaceBuyable" class="hyperButton buyable" onclick="buyHyperspace()" cost="1">Buy a hyperspace. Cost: <span id="hyperspaceCost">1</span> hyperspace energy</button><br>
 				
-				<text>You have <span id="totalHyperAmount">0</span> total hyperspace.</text><br>
-				<text>You have <span id="unspentHyperspaceAmt">0</span> unspent hyperspace.</text><br>
+				<text>You have <span id="totalHyperAmount">0</span> hyperspace.</text><br>
+				<text hidden>You have <span id="unspentHyperspaceAmt">0</span> unspent hyperspace.</text><br>
 				
 				
 				<text class="psudoHead">Dimensions</text><br>
@@ -294,11 +294,11 @@
 				<text>You have <span id="planeAmount">0</span> planes, decreasing by <span id="hyperLoss">1</span>% and producing that many lines every ipsitick.</text><br>
 				<text>You have <span id="lineAmount">0</span> lines, decreasing by <span id="hyperLoss">1</span>% every ipsitick.</text><br>
 				<text>Your lines are producing <span id="lineProduction">0</span> points every ipsitick.</text><br><br>
-				<div id="hyperUpgrades">
+				<div id="hyperUpgrades" hidden>
 					<text class="psudoHead">Upgrades</text><br>
-					<button id="HU2" class="hyperButton upgrade" onclick="hyperUpgrade(2)" cost="2">Unlock a slider that multiplies the output and loss for dimensions. Cost: 2 hyperspace energy</button>
-					<button id="HU1" class="hyperButton upgrade" onclick="hyperUpgrade(1)" cost="2">Multiply log points by 2 for each hyperspace. Cost: 2 hyperspace energy</button>
-					<button id="HU3" class="hyperButton upgrade" onclick="hyperUpgrade(3)" cost="3">Unlock hyperspace challenges. Cost: 3 hyperspace energy</button>
+					<button id="HU2" class="hyperButton upgrade" onclick="hyperUpgrade(2)" cost="1">Unlock a slider that multiplies the output and loss for dimensions. Cost: 1 hyperspace energy</button>
+					<button id="HU1" class="hyperButton upgrade" onclick="hyperUpgrade(1)" cost="1">Multiply log points by 2 for each hyperspace. Cost: 1 hyperspace energy</button>
+					<button id="HU3" class="hyperButton upgrade" onclick="hyperUpgrade(3)" cost="2">Unlock hyperspace challenges. Cost: 2 hyperspace energy</button>
 					<button id="HU7" class="hyperButton upgrade" onclick="hyperUpgrade(7)" cost="15">Muliply hyperspace energy gain by your unspent hyperspace. Cost: 15 hyperspace energy</button>
 					<button id="HU4" class="hyperButton upgrade" onclick="hyperUpgrade(4)" cost="10" hidden>Line to point production is based on your best lines in this base reset. Cost: 10 hyperspace energy</button>
 					<button id="HU6" class="hyperButton upgrade" onclick="hyperUpgrade(6)" cost="15" hidden title="Past base 60, number will display in base 60. Only costs are affected. Also, the reset requirement exponent increases by 1 every 60 bases.">Increase max base by 6 for each hyperspace. Cost: 15 hyperspace energy</button>
@@ -392,8 +392,9 @@
 				</div>
 			</div>
 			<div id="optionsTab" hidden = true>
-				<input hidden type="range" id="freex2" min='1' max='2048' value="1" oninput="freeMult.innerHTML = freex2.value"></input><text>x<span id="freeMult">1</span> multiplier (for convenience, leave at x1 if you want to experience the game as intended)</text><br>
+				<button onclick="autosave()">SAVE</button><br>
 				<button onclick="answer=confirm('are you sure you want to hard reset? this will delete all of your progress, and there will be no reward.');if(answer){localStorage.clear();location.reload();}">HARD RESET</button>
+				<button onclick="answer=prompt('Why do you want to reset your game? Response must be exactly 60 characters.');if(answer.length==60){localStorage.clear();location.reload();}else if(answer.length>60){alert('Please give the cliffnotes version.')}else{alert('You did not reach the word requirement.')}">HARDER RESET</button>
 			</div>
 			<div id="achievementsTab" hidden = true>
 				<text>Coming soon...</text>
