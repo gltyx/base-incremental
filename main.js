@@ -127,7 +127,7 @@ function reloadIpsi(){
 
 //Updates the hyperspatial ipsi-interval when you buy them.
 function reloadHyperIpsi(){
-	if(HC2.disabled = true){
+	if(HC2.disabled == true){
 		clearInterval(baseAutomatorKey)
 		baseAutomatorKey = setInterval(baseAutomator,Math.max(10,1000/log(hyperIpsis+2,2)))
 	}
@@ -138,6 +138,8 @@ function reloadHyperIpsi(){
 	//	ipsiGenKey = setInterval(passiveIpsiGen,Math.max(10,1000/hyperIpsis))
 	//}
 }
+
+const version = "1.2.1"
 
 var ipsiKey = -1
 var passiveLogKey = -1;
@@ -154,7 +156,7 @@ var bestLogPoints = 0
 var bestLogMaxBase = false
 
 //All variables in local storage
-if(localStorage.length == 57){
+if(localStorage.getItem("version") == version){
 	//general variables
 	var curBase = Number(localStorage.getItem("curBase"));
 	var cheats = Bool(localStorage.getItem("cheats"));
@@ -233,6 +235,7 @@ if(localStorage.length == 57){
 	
 	htmlContent.innerHTML = localStorage.getItem("webpageState")
 	
+	
 	if(HC1.disabled){
 		setInterval(logPathAuto,0)
 	}
@@ -242,6 +245,7 @@ if(localStorage.length == 57){
 	
 	reloadIpsi()
 	reloadHyperIpsi()
+	
 }
 else{
 	if(localStorage.length != 0){
@@ -298,7 +302,8 @@ else{
 	//bitwise variables
 	var bitwisePoints = 0
 	
-	//
+	//v1.2
+	//base and log variables
 	var cheaperPointUpgrade = false
 	var pointsUpgradeEffect = 1
 	var selfSynLog = false;
@@ -310,7 +315,7 @@ else{
 	var pathMulti = false;
 
 
-
+	//hyperspace variables
 	var hyperEnergy = 0;
 	var totalHyperspace = 0;
 	var effectiveHyperspace = 0;
@@ -359,6 +364,8 @@ function updatePage(){
 	baseScore.innerHTML = "You are in base "+curBase+"."
 	ipsiAmt.innerHTML = "You have "+plural(new base(ipsiAmount,10).value,"ipsiclicker")
 	pointGainPower.innerHTML = new base((pointsUpgradeTimesBought+1)-pointsUpgradeTimesBought,curBase).value
+	
+	optimalBase.innerHTML = Math.floor(log(logPoints,10)*(60/9))
 
 	//buttons
 	//Enter next base button
@@ -617,7 +624,7 @@ function prestige(){
 			baseTabButton.hidden=false;
 		}
 	}else{
-		if(enterCostForm != 3 || !logUnlocked){
+		if(enterCostForm != 3 || !logUnlocked || getElement("101enabled").checked==false){
 			if(curBase == maxBase){
 				curBase = maxBase
 			}
@@ -734,6 +741,7 @@ function bitwiseReset(){
 }
 
 function hyperPrest(){
+	console.log("...")
 	hyperEnergy += Math.max((Math.floor(totalPaths/4)-1),0) * unspentHyperspace**hyperMulti
 	hyperResetButton.hidden = true
 	hyperTabButton.hidden = false
@@ -886,6 +894,7 @@ function buyHyperspace(){
 	effectiveHyperspace = unspentHyperspace;
 	totalHyperAmount.innerHTML = totalHyperspace
 	unspentHyperspaceAmt.innerHTML = unspentHyperspace
+	hyperUpgrades.hidden = false;
 }
 
 //The only pre-base upgrade
@@ -984,7 +993,7 @@ function baseUpgrade(number){
 	}
 	
 	curBase -= getElement("baseUpgrade"+number).getAttribute("cost")
-	pointGainBase = 1;
+	pointsUpgradeTimesBought = 0;
 	pointGainCost = (Math.max(Math.round(curBase/(2**cheaperPointUpgrade)),2))**initPointsUpgradeCostStep;
 	baseUpgrades = baseUpgrades.replace(number,'');
 	getElement("baseUpgrade"+number).disabled = true;
@@ -1137,19 +1146,19 @@ function logUpgrade(number){
 function hyperUpgrade(number){
 	switch(number){
 		case 1:
-			hyperEnergy -= 2
+			hyperEnergy -= 1
 			hyperLogMulti = true
 			HU1.innerHTML = "Multiply log points by 2 for each hyperspace. Bought"
 			HU1.disabled = true
 			break
 		case 2:
-			hyperEnergy -= 2
+			hyperEnergy -= 1
 			hyperSliderDiv.hidden = false
 			HU2.innerHTML = "Unlock a slider that multiplies the output and loss for dimensions. Bought"
 			HU2.disabled = true
 			break
 		case 3:
-			hyperEnergy -= 3
+			hyperEnergy -= 2
 			hyperChalenges.hidden = false
 			HU3.innerHTML = "Unlock hyperspace challenges. Bought"
 			HU3.disabled = true
@@ -1418,7 +1427,7 @@ function ipsiClicker(currency){
 			}
 			if(!freeIpsi){
 				curBase -= Number(cost)
-				pointGainBase = 1;
+				pointsUpgradeTimesBought = 1;
 				pointGainCost = (Math.max(Math.round(curBase/(2**cheaperPointUpgrade)),2))**initPointsUpgradeCostStep;
 			}
 			if(ipsiAmount > 100 && ipsiMax){
@@ -1531,7 +1540,6 @@ function multipliers(baseAmt){
 	}
 	//multis.push(((log(score.decimal+1)/log(curBase))+1)**selfSyn)
 	multis.push(Math.max((log(ipsiAmount)/log(2))**ipsiPointMulti,1))
-	multis.push(freex2.value)
 	multis.push((log(score.decimal+1,62-(Math.min(curBase,60)))+1)**selfSynLog)
 	
 	multis.push(((bestBase-curBase)+2)**distanceMulti)
