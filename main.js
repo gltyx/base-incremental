@@ -249,7 +249,7 @@ if(localStorage.getItem("version") == version){
 }
 else{
 	if(localStorage.length != 0){
-		alert("Oh noes! Either your save file is from a previous version, or it has been incompatibly tampered with. Your progress needs to be set back to the previous checkpoint.")
+		alert("哦，不！您的保存文件要么来自以前的版本，要么已被不兼容地篡改。您的进度需要回到上一个检查点。")
 		
 		if(localStorage.getItem("checkpoint") != null){
 			var progress = localStorage.getItem("checkpoint")
